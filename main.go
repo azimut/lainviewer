@@ -90,7 +90,7 @@ func getUrl(url string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Set("User-Agent", "Reddit_Cli/0.1")
+	req.Header.Set("User-Agent", "LainViewer/0.1")
 
 	resp, err := client.Do(req)
 	if err != nil {
