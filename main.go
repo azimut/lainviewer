@@ -4,7 +4,15 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"time"
+
+	"github.com/dustin/go-humanize"
 )
+
+func human_time(unix int64) string {
+	unix_time := time.Unix(unix, 0)
+	return humanize.Time(unix_time)
+}
 
 const JSONFILE string = "/home/sendai/37647.json"
 
@@ -18,7 +26,7 @@ type Message struct {
 	Comment        string `json:"com"`
 	Author         string `json:"name"`
 	trip           string
-	Time           int `json:"time"`
+	Time           int64 `json:"time"`
 	omitted_posts  int
 	omitted_images int
 	sticky         int
@@ -30,8 +38,8 @@ type Message struct {
 	h              int
 	w              int
 	fsize          int
-	filename       string
-	ext            string
+	Filename       string `json:"filename"`
+	Ext            string `json:"ext"`
 	tim            string
 	md5            string
 	Resto          int `json:"resto"`
@@ -47,5 +55,21 @@ func main() {
 	if err := json.Unmarshal(bytes, &data); err != nil {
 		panic(err)
 	}
-	fmt.Printf("%s\n", data.Posts[0].Comment)
+	print_op(data, JSONFILE)
+}
+
+// print_op Prints the main thread post
+func print_op(resp Rsp, url string) {
+	// Header
+	fmt.Printf("\ntitle: %s\nurl: %s\navatar:%s\n\n",
+		resp.Posts[0].Title,
+		url,
+		resp.Posts[0].Filename+resp.Posts[0].Ext, // TODO: add domain
+	)
+	// Message
+	fmt.Printf("%s\n", resp.Posts[0].Comment)
+	// Footer
+	fmt.Printf("\n%s - %s",
+		resp.Posts[0].Author,
+		human_time(resp.Posts[0].Time))
 }
