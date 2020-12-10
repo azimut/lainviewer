@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
+	"strings"
 	"time"
 
 	markdown "github.com/MichaelMure/go-term-markdown"
@@ -17,8 +19,6 @@ func human_time(unix int64) string {
 	unix_time := time.Unix(unix, 0)
 	return humanize.Time(unix_time)
 }
-
-const JSONFILE string = "/home/sendai/37647.json"
 
 type Rsp struct {
 	Posts []Message
@@ -62,6 +62,21 @@ func init() {
 func validate_uri() error {
 	if uri == "" {
 		return fmt.Errorf("-u parameter not provided")
+	}
+
+	u, err := url.Parse(uri)
+	if err != nil {
+		return fmt.Errorf("unparsable url")
+	}
+
+	if u.Host != "lainchan.org" {
+		return fmt.Errorf("invalid domain")
+	}
+	if strings.HasSuffix(uri, ".html") {
+		uri = strings.TrimSuffix(uri, ".html") + ".json"
+	}
+	if !strings.HasSuffix(uri, ".json") {
+		return fmt.Errorf("invalid url??")
 	}
 	return nil
 }
@@ -111,7 +126,7 @@ func main() {
 	if err := json.Unmarshal(bytes, &data); err != nil {
 		panic(err)
 	}
-	print_op(data, JSONFILE)
+	print_op(data, uri)
 	print_comments(data)
 }
 
