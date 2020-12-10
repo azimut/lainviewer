@@ -2,8 +2,10 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io/ioutil"
+	"net/http"
 	"time"
 
 	markdown "github.com/MichaelMure/go-term-markdown"
@@ -47,8 +49,60 @@ type Message struct {
 	Resto          int `json:"resto"`
 }
 
+var timeout int
+var uri string
+
+func init() {
+	flag.StringVar(&uri, "u", "", "url")
+	flag.IntVar(&timeout, "t", 5, "timeout after seconds")
+}
+
+// TODO: add domain check
+// TODO: add html -> json convert
+func validate_uri() error {
+	if uri == "" {
+		return fmt.Errorf("-u parameter not provided")
+	}
+	return nil
+}
+
+// getUrl get JSON from url
+func getUrl(url string) ([]byte, error) {
+	client := &http.Client{
+		Timeout: time.Duration(timeout) * time.Second}
+
+	req, err := http.NewRequest(http.MethodGet, url, nil)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("User-Agent", "Reddit_Cli/0.1")
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		r, _ := ioutil.ReadAll(resp.Body)
+		fmt.Println(uri)
+		fmt.Println(string(r))
+		return nil, fmt.Errorf("invalid http status code %d", resp.StatusCode)
+	}
+
+	if b, err := ioutil.ReadAll(resp.Body); err == nil {
+		return b, nil
+	}
+	return nil, fmt.Errorf("no body read")
+}
+
 func main() {
-	bytes, err := ioutil.ReadFile(JSONFILE)
+	flag.Parse()
+	if err := validate_uri(); err != nil {
+		panic(err)
+	}
+
+	bytes, err := getUrl(uri)
 	if err != nil {
 		panic(err)
 	}
