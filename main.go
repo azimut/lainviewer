@@ -57,8 +57,7 @@ func init() {
 	flag.IntVar(&timeout, "t", 5, "timeout after seconds")
 }
 
-// TODO: add domain check
-// TODO: add html -> json convert
+// TODO: remove url arguments?
 func validate_uri() error {
 	if uri == "" {
 		return fmt.Errorf("-u parameter not provided")
@@ -90,6 +89,7 @@ func getUrl(url string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
+	// TODO: set UA through a flag
 	req.Header.Set("User-Agent", "LainViewer/0.1")
 
 	resp, err := client.Do(req)
@@ -142,6 +142,7 @@ func print_comments(data Rsp) {
 
 func html2console(raw string) string {
 	mdcomment, _ := html2text.FromString(raw, html2text.Options{PrettyTables: true})
+	// TODO: use console width
 	return string(markdown.Render(mdcomment, 80, 3))
 }
 
