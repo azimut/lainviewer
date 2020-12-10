@@ -1,3 +1,33 @@
 * lainviewer
-Cli tree viewer of lainchan threads.
+Cli viewer of lainchan threads.
+** Usage
+#+begin_src
+> lainviewer -t 20 -u https://lainchan.org/%CE%A9/res/37647.html
 
+title: Let's create a webring! pt3
+url: https://lainchan.org/%CE%A9/res/37647.json
+avatar: earth-spinning-rotating-animation-24.gif
+
+   Hello lainons, this is the part 3 of the webring thread last thread: >>29660
+
+   How do i join?
+
+   post:
+   • link to your website
+   • a 240x60 banner of your website
+
+   i'll be adding your websites to
+   [https://qorg11.net/webring.xhtml](https://qorg11.net/webring.xhtml)
+
+   site of the lainon who came up with the idea:
+   [https://yukinu.com](https://yukinu.com)
+
+
+qorg11 - 5 days ago
+
+qorg11 - 37648
+   My banners: [https://qorg11.net/img/bigqorg.png](https://qorg11.net/img/bigqo
+   rg.png)[https://qorg11.net/img/kill-9.xyz.png](https://qorg11.net/img/kill-9.
+   xyz.png)
+...
+#+end_src
