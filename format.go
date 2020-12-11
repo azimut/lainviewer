@@ -19,7 +19,7 @@ func human_time(unix int64) string {
 // NOTE: Resto field is useless, it ALWAYS has the mainID
 func print_comments(data Rsp) {
 	for _, value := range data.Posts[1:] {
-		fmt.Printf("%s - %d\n", value.Author, value.No)
+		fmt.Printf("%s - %d - %s\n", value.Author, value.No, human_time(value.Time))
 		fmt.Printf("%s\n\n\n", html2console(value.Comment))
 	}
 }
@@ -41,7 +41,7 @@ func print_op(resp Rsp, url string) {
 	// Message
 	fmt.Printf("%s\n", html2console(resp.Posts[0].Comment))
 	// Footer
-	fmt.Printf("\n%s - %s\n\n",
+	fmt.Printf("%s - %s\n\n\n",
 		resp.Posts[0].Author,
 		human_time(resp.Posts[0].Time))
 }
