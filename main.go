@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"flag"
-	"io/ioutil"
 )
 
 type Rsp struct {
@@ -53,15 +52,10 @@ func main() {
 		panic(err)
 	}
 
-	bytes, err := ioutil.ReadFile("/home/sendai/37647.json")
+	bytes, err := getUrl(uri)
 	if err != nil {
 		panic(err)
 	}
-
-	// bytes, err := getUrl(uri)
-	// if err != nil {
-	// 	panic(err)
-	// }
 
 	var data Rsp
 	if err := json.Unmarshal(bytes, &data); err != nil {
