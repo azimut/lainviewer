@@ -122,7 +122,7 @@ func print_comment(msg Message, rsp Rsp, depth int) {
 func html2console(raw string, depth int) string {
 	mdcomment, _ := html2text.FromString(raw, html2text.Options{PrettyTables: true})
 	// TODO: use console width
-	return string(markdown.Render(mdcomment, 80, Max(depth*3, 0)))
+	return string(markdown.Render(mdcomment, 80, Max(depth*3+1, 0)))
 }
 
 // print_op Prints the main thread post

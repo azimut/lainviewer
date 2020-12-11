@@ -2,32 +2,41 @@
 Cli viewer of lainchan threads.
 ** Usage
 #+begin_src
-> lainviewer -t 20 -u https://lainchan.org/%CE%A9/res/37647.html
+> lainviewer -t 20 -u https://lainchan.org/%CE%BB/res/16099.html
 
-title: Let's create a webring! pt3
-url: https://lainchan.org/%CE%A9/res/37647.json
-avatar: earth-spinning-rotating-animation-24.gif
+title:
+url: https://lainchan.org/%CE%BB/res/16099.json
+avatar: Waveforms.png
 
-   Hello lainons, this is the part 3 of the webring thread last thread: >>29660
+    Audio Programming MEGATHREAD!
 
-   How do i join?
+    Hi fellas. Let's talk real(time) soykaf. Let's share your questions,
+    accomplishments, tutorials and papers.
 
-   post:
-   • link to your website
-   • a 240x60 banner of your website
+    I am a total newbie in this area, but very excited one. My first question:
 
-   i'll be adding your websites to
-   [https://qorg11.net/webring.xhtml](https://qorg11.net/webring.xhtml)
+    What framework would you recommend for someone who would like to create VST
+    for DAWs?
 
-   site of the lainon who came up with the idea:
-   [https://yukinu.com](https://yukinu.com)
+Batou - 1 year ago
 
+ Ok, I think I will study
+ [https://github.com/amsynth](https://github.com/amsynth) then I will look for
+ some windows equivalent and finally I will be able to create simple multi
+ platform VST & standalone synth without bloat frameworksAlso, could someone
+ give me some good materials about MIDI protocol? Thanks!
+>> Wirth - 16100 - 1 year ago
 
-qorg11 - 5 days ago
+ One more edit:I am currently building on Linux [https://github.com/steinbergmed
+ ia/vst3sdk](https://github.com/steinbergmedia/vst3sdk) This look super cool,
+ Idk why haven't I found this earlier.
+>> Emmanuel - 16101 - 1 year ago
 
-qorg11 - 37648
-   My banners: [https://qorg11.net/img/bigqorg.png](https://qorg11.net/img/bigqo
-   rg.png)[https://qorg11.net/img/kill-9.xyz.png](https://qorg11.net/img/kill-9.
-   xyz.png)
-...
+    Ok, after ~10h spent trying everything but JUCEI decided to give it a try.It
+    rocks guys.If anyone here would ever start his journey with audio plugins
+    development then give it a try!
+   >> quote - 16127 - 1 year ago
+
+       thanks for the advice
+      >> Anonymous - 16235 - 1 year ago
 #+end_src
