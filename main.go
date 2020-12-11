@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"flag"
+	"io/ioutil"
 )
 
 type Rsp struct {
@@ -36,12 +37,14 @@ type Message struct {
 
 var timeout int
 var uri string
+var maxWidth int
 
 // TODO: flag color
 // TODO: max width
 func init() {
 	flag.StringVar(&uri, "u", "", "url")
 	flag.IntVar(&timeout, "t", 5, "timeout after seconds")
+	flag.IntVar(&maxWidth, "w", 120, "max text width")
 }
 
 func main() {
@@ -50,10 +53,15 @@ func main() {
 		panic(err)
 	}
 
-	bytes, err := getUrl(uri)
+	bytes, err := ioutil.ReadFile("/home/sendai/37647.json")
 	if err != nil {
 		panic(err)
 	}
+
+	// bytes, err := getUrl(uri)
+	// if err != nil {
+	// 	panic(err)
+	// }
 
 	var data Rsp
 	if err := json.Unmarshal(bytes, &data); err != nil {
