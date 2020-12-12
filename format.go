@@ -75,6 +75,9 @@ func (c *Message) isOrphan(rsp Rsp) (bool, error) {
 
 // getMedia returns a slice of media urls and original filename
 func (m *Message) getMedia() (media []string) {
+	if m.Filename == "" {
+		return media
+	}
 	mainMedia, err := srcFilename(m.Tim, m.Ext)
 	if err != nil {
 		log.Print(err)
@@ -123,8 +126,14 @@ func print_comment(msg Message, rsp Rsp, depth int) {
 	} else {
 		fmt.Printf("%s", html2console(msg.Comment, depth))
 	}
+	// Media
+	for _, media := range msg.getMedia() {
+		fmt.Printf(strings.Repeat(" ", Max(depth*3+1, 0))+"%s\n", media)
+	}
+	// Footer
 	fmt.Printf(strings.Repeat(" ", Max(depth*3, 0))+">> %s - %d - %s\n\n",
 		msg.Author, msg.No, human_time(msg.Time))
+	// Try to find childs
 	for _, othermsg := range rsp.Posts[1:] {
 		otherParentId, err := othermsg.Parent()
 		if err != nil {
