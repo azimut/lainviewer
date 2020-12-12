@@ -50,6 +50,7 @@ type Extra struct {
 var timeout int
 var uri string
 var maxWidth int
+var showAuthors bool
 
 // TODO: flag color
 // TODO: max width
@@ -57,6 +58,7 @@ func init() {
 	flag.StringVar(&uri, "u", "", "url")
 	flag.IntVar(&timeout, "t", 5, "timeout after seconds")
 	flag.IntVar(&maxWidth, "w", 120, "max text width")
+	flag.BoolVar(&showAuthors, "A", true, "show comment authors")
 }
 
 func main() {

@@ -131,8 +131,16 @@ func print_comment(msg Message, rsp Rsp, depth int) {
 		fmt.Printf(strings.Repeat(" ", Max(depth*3+1, 0))+"%s\n", media)
 	}
 	// Footer
-	fmt.Printf(strings.Repeat(" ", Max(depth*3, 0))+">> %s - %d - %s\n\n",
-		msg.Author, msg.No, human_time(msg.Time))
+	if showAuthors {
+		fmt.Printf(strings.Repeat(" ", Max(depth*3, 0))+">> %s - %d - %s\n\n",
+			msg.Author,
+			msg.No,
+			human_time(msg.Time))
+	} else {
+		fmt.Printf(strings.Repeat(" ", Max(depth*3, 0))+">> %d - %s\n\n",
+			msg.No,
+			human_time(msg.Time))
+	}
 	// Try to find childs
 	for _, othermsg := range rsp.Posts[1:] {
 		otherParentId, err := othermsg.Parent()
@@ -162,7 +170,14 @@ func print_op(resp Rsp) {
 	// Message
 	fmt.Printf("%s\n", html2console(resp.Posts[0].Comment, 1))
 	// Footer
-	fmt.Printf("%s - %s\n\n\n",
-		resp.Posts[0].Author,
-		human_time(resp.Posts[0].Time))
+	if showAuthors == true {
+		fmt.Printf("%s - %d -  %s\n\n\n",
+			resp.Posts[0].Author,
+			resp.Posts[0].No,
+			human_time(resp.Posts[0].Time))
+	} else {
+		fmt.Printf("%d - %s\n\n\n",
+			resp.Posts[0].No,
+			human_time(resp.Posts[0].Time))
+	}
 }
