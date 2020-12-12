@@ -31,8 +31,8 @@ type Message struct {
 	Ext            string `json:"ext"`
 	Tim            string `json:"tim"`
 	md5            string
-	Resto          int `json:"resto"`
-	ExtraFiles     []Extra
+	Resto          int     `json:"resto"`
+	ExtraFiles     []Extra `json:"extra_files"`
 }
 
 type Extra struct {
@@ -74,6 +74,6 @@ func main() {
 	if err := json.Unmarshal(bytes, &data); err != nil {
 		panic(err)
 	}
-	print_op(data, uri)
+	print_op(data)
 	print_comments(data)
 }

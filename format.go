@@ -73,6 +73,23 @@ func (c *Message) isOrphan(rsp Rsp) (bool, error) {
 	return found, nil
 }
 
+// getMedia returns a slice of media urls and original filename
+func (m *Message) getMedia() (media []string) {
+	mainMedia, err := srcFilename(m.Tim, m.Ext)
+	if err != nil {
+		log.Print(err)
+	}
+	media = append(media, fmt.Sprintf("%s (%s)", mainMedia, m.Filename+m.Ext))
+	for _, e := range m.ExtraFiles {
+		extraMedia, err := srcFilename(e.Tim, e.Ext)
+		if err != nil {
+			log.Print(err)
+		}
+		media = append(media, fmt.Sprintf("%s (%s)", extraMedia, e.Filename+e.Ext))
+	}
+	return media
+}
+
 // print_comments prints the rest of the messages
 // TODO: sanitize author for trailing spaces at least
 // NOTE: Resto field is useless, it ALWAYS has the mainID
@@ -126,15 +143,13 @@ func html2console(raw string, depth int) string {
 }
 
 // print_op Prints the main thread post
-func print_op(resp Rsp, url string) {
-	old := resp.Posts[0].Filename + resp.Posts[0].Ext
-	new, err := srcFilename(resp.Posts[0].Tim, resp.Posts[0].Ext)
-	if err != nil {
-		log.Print(err)
-	}
+func print_op(resp Rsp) {
 	// Header
-	fmt.Printf("\ntitle: %s\nurl: %s\nmedia: %s (%s)\n\n",
-		resp.Posts[0].Title, url, new, old)
+	fmt.Printf("\ntitle: %s\nurl: %s\n", resp.Posts[0].Title, uri)
+	for _, media := range resp.Posts[0].getMedia() {
+		fmt.Printf("media: %s\n", media)
+	}
+	fmt.Println()
 	// Message
 	fmt.Printf("%s\n", html2console(resp.Posts[0].Comment, 1))
 	// Footer
