@@ -29,9 +29,22 @@ type Message struct {
 	fsize          int
 	Filename       string `json:"filename"`
 	Ext            string `json:"ext"`
-	tim            string
+	Tim            string `json:"tim"`
 	md5            string
 	Resto          int `json:"resto"`
+	ExtraFiles     []Extra
+}
+
+type Extra struct {
+	tn_h     int
+	tn_w     int
+	h        int
+	w        int
+	fsize    int
+	Filename string `json:"filename"`
+	Ext      string `json:"ext"`
+	Tim      string `json:"tim"`
+	md5      string
 }
 
 var timeout int

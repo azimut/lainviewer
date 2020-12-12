@@ -32,6 +32,20 @@ func validate_uri() error {
 	return nil
 }
 
+// srcFileneme returnes the path where the image can be found
+func srcFilename(filename string, extension string) (string, error) {
+	u, err := url.Parse(uri)
+	if err != nil {
+		return "", fmt.Errorf("unparsable url")
+	}
+	return fmt.Sprintf("%s://%s/%s/src/%s%s",
+		u.Scheme,
+		u.Host,
+		strings.Split(u.Path, "/")[1],
+		filename,
+		extension), nil
+}
+
 // getUrl get JSON from url
 func getUrl(url string) ([]byte, error) {
 	client := &http.Client{

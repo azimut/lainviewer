@@ -127,12 +127,14 @@ func html2console(raw string, depth int) string {
 
 // print_op Prints the main thread post
 func print_op(resp Rsp, url string) {
+	old := resp.Posts[0].Filename + resp.Posts[0].Ext
+	new, err := srcFilename(resp.Posts[0].Tim, resp.Posts[0].Ext)
+	if err != nil {
+		log.Print(err)
+	}
 	// Header
-	fmt.Printf("\ntitle: %s\nurl: %s\navatar: %s\n\n",
-		resp.Posts[0].Title,
-		url,
-		resp.Posts[0].Filename+resp.Posts[0].Ext, // TODO: add domain
-	)
+	fmt.Printf("\ntitle: %s\nurl: %s\nmedia: %s (%s)\n\n",
+		resp.Posts[0].Title, url, new, old)
 	// Message
 	fmt.Printf("%s\n", html2console(resp.Posts[0].Comment, 1))
 	// Footer
