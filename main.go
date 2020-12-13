@@ -67,7 +67,7 @@ func main() {
 		panic(err)
 	}
 
-	bytes, err := getUrl(uri)
+	bytes, err := getUrl()
 	if err != nil {
 		panic(err)
 	}

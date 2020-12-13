@@ -47,11 +47,11 @@ func srcFilename(filename string, extension string) (string, error) {
 }
 
 // getUrl get JSON from url
-func getUrl(url string) ([]byte, error) {
+func getUrl() ([]byte, error) {
 	client := &http.Client{
 		Timeout: time.Duration(timeout) * time.Second}
 
-	req, err := http.NewRequest(http.MethodGet, url, nil)
+	req, err := http.NewRequest(http.MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
 	}
