@@ -26,7 +26,7 @@ type Message struct {
 	tn_w           int
 	h              int
 	w              int
-	fsize          int
+	Fsize          uint64 `json:"fsize"`
 	Filename       string `json:"filename"`
 	Ext            string `json:"ext"`
 	Tim            string `json:"tim"`
@@ -40,7 +40,7 @@ type Extra struct {
 	tn_w     int
 	h        int
 	w        int
-	fsize    int
+	Fsize    uint64 `json:"fsize"`
 	Filename string `json:"filename"`
 	Ext      string `json:"ext"`
 	Tim      string `json:"tim"`

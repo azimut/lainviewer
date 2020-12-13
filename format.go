@@ -82,13 +82,13 @@ func (m *Message) getMedia() (media []string) {
 	if err != nil {
 		log.Print(err)
 	}
-	media = append(media, fmt.Sprintf("%s (%s)", mainMedia, m.Filename+m.Ext))
+	media = append(media, fmt.Sprintf("%s (%s) %s", mainMedia, m.Filename+m.Ext, humanize.Bytes(m.Fsize)))
 	for _, e := range m.ExtraFiles {
 		extraMedia, err := srcFilename(e.Tim, e.Ext)
 		if err != nil {
 			log.Print(err)
 		}
-		media = append(media, fmt.Sprintf("%s (%s)", extraMedia, e.Filename+e.Ext))
+		media = append(media, fmt.Sprintf("%s (%s) %s", extraMedia, e.Filename+e.Ext, humanize.Bytes(e.Fsize)))
 	}
 	return media
 }
