@@ -15,14 +15,14 @@ func validate_uri() error {
 		return fmt.Errorf("-u parameter not provided")
 	}
 
-	u, err := url.Parse(uri)
+	_, err := url.Parse(uri)
 	if err != nil {
 		return fmt.Errorf("unparsable url")
 	}
 
-	if u.Host != "lainchan.org" {
-		return fmt.Errorf("invalid domain")
-	}
+	// if u.Host != "lainchan.org" {
+	// 	return fmt.Errorf("invalid domain")
+	// }
 	if strings.HasSuffix(uri, ".html") {
 		uri = strings.TrimSuffix(uri, ".html") + ".json"
 	}
