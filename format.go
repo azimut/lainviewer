@@ -78,17 +78,21 @@ func (m *Message) getMedia() (media []string) {
 	if m.Filename == "" {
 		return media
 	}
-	mainMedia, err := srcFilename(m.Tim, m.Ext)
+	mediaUrl, err := srcFilename(m.Tim, m.Ext)
 	if err != nil {
 		log.Print(err)
+		return media
 	}
-	media = append(media, fmt.Sprintf("%s (%s) %s", mainMedia, m.Filename+m.Ext, humanize.Bytes(m.Fsize)))
+	mediaSize := humanize.Bytes(m.Fsize)
+	media = append(media, fmt.Sprintf("%s (%s) %s", mediaUrl, m.Filename+m.Ext, mediaSize))
 	for _, e := range m.ExtraFiles {
-		extraMedia, err := srcFilename(e.Tim, e.Ext)
+		extraUrl, err := srcFilename(e.Tim, e.Ext)
 		if err != nil {
 			log.Print(err)
+			break
 		}
-		media = append(media, fmt.Sprintf("%s (%s) %s", extraMedia, e.Filename+e.Ext, humanize.Bytes(e.Fsize)))
+		extraSize := humanize.Bytes(e.Fsize)
+		media = append(media, fmt.Sprintf("%s (%s) %s", extraUrl, e.Filename+e.Ext, extraSize))
 	}
 	return media
 }
