@@ -112,6 +112,19 @@ func print_comments(data Rsp) {
 	}
 }
 
+// remove_citations removes ALL citations to the original post AND link to parent post. Might be too much for normal post, but we limit the usage to single parent posts. Otherwise parsers gets confused and print a long line. Like this one.
+func remove_citations(m string) (string, error) {
+	doc, err := goquery.NewDocumentFromReader(strings.NewReader(m))
+	if err != nil {
+		return "", err
+	}
+	doc.Find("span.quote").Each(func(_ int, s *goquery.Selection) {
+		s.Remove()
+	})
+	doc.Find("a").First().Remove()
+	return doc.Html()
+}
+
 // print_comment prints the message provided as well as any children
 func print_comment(msg Message, rsp Rsp, depth int) {
 	parentId, err := msg.Parent()
@@ -119,9 +132,12 @@ func print_comment(msg Message, rsp Rsp, depth int) {
 		log.Print(err)
 	}
 	if parentId > 0 {
+		msg, err := remove_citations(msg.Comment)
+		if err != nil {
+			log.Print(err)
+		}
 		fmt.Printf("%s", html2console(
-			// TODO: properly remove the quote
-			strings.Join(strings.Split(msg.Comment, "<br/>")[1:], ""),
+			msg,
 			depth))
 	} else {
 		fmt.Printf("%s", html2console(msg.Comment, depth))
