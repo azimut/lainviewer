@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	markdown "github.com/MichaelMure/go-term-markdown"
+	text "github.com/MichaelMure/go-term-text"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/dustin/go-humanize"
 	"github.com/jaytaylor/html2text"
@@ -58,9 +58,9 @@ func (m *Message) Parent() (int, error) {
 }
 
 // isOrphan if no parent exists for post, like linking elsewhere
-func (c *Message) isOrphan(rsp Rsp) (bool, error) {
+func (m *Message) isOrphan(rsp Rsp) (bool, error) {
 	found := true
-	parentid, err := c.Parent()
+	parentid, err := m.Parent()
 	if err != nil {
 		return false, err
 	}
@@ -170,9 +170,10 @@ func print_comment(msg Message, rsp Rsp, depth int) {
 }
 
 func html2console(raw string, depth int) string {
-	mdcomment, _ := html2text.FromString(raw, html2text.Options{PrettyTables: true})
+	md, _ := html2text.FromString(raw, html2text.Options{PrettyTables: true})
 	// TODO: use console width
-	return string(markdown.Render(mdcomment, 80, Max(depth*3+1, 0)))
+	s, _ := text.WrapLeftPadded(md, 80, depth*3+1)
+	return s + fmt.Sprintln()
 }
 
 // print_op Prints the main thread post
