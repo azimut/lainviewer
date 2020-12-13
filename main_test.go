@@ -8,13 +8,13 @@ import (
 
 func TestMain(t *testing.T) {
 
-	uri = "https://lainchan.org/music/res/37647.html"
+	uri = "https://lainchan.org/music/res/6019.html"
 	showAuthors = false
 	if err := validate_uri(); err != nil {
 		panic(err)
 	}
 
-	bytes, err := ioutil.ReadFile("testdata/37647.json")
+	bytes, err := ioutil.ReadFile("testdata/6019.json")
 	if err != nil {
 		panic(err)
 	}
