@@ -19,10 +19,10 @@ func TestMain(t *testing.T) {
 		panic(err)
 	}
 
-	var data Rsp
+	var data Thread
 	if err := json.Unmarshal(bytes, &data); err != nil {
 		panic(err)
 	}
-	print_op(data)
+	printOp(data)
 	print_comments(data)
 }

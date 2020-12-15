@@ -27,9 +27,8 @@ func Max(x, y int) int {
 	return y
 }
 
-func human_time(unix int64) string {
-	unix_time := time.Unix(unix, 0)
-	return humanize.Time(unix_time)
+func humanTime(unix int64) string {
+	return humanize.Time(time.Unix(unix, 0))
 }
 
 func (m *Message) Parent() (int, error) {
@@ -58,7 +57,7 @@ func (m *Message) Parent() (int, error) {
 }
 
 // isOrphan if no parent exists for post, like linking elsewhere
-func (m *Message) isOrphan(rsp Rsp) (bool, error) {
+func (m *Message) isOrphan(rsp Thread) (bool, error) {
 	found := true
 	parentid, err := m.Parent()
 	if err != nil {
@@ -100,7 +99,7 @@ func (m *Message) getMedia() (media []string) {
 // print_comments prints the rest of the messages
 // TODO: sanitize author for trailing spaces at least
 // NOTE: Resto field is useless, it ALWAYS has the mainID
-func print_comments(data Rsp) {
+func print_comments(data Thread) {
 	for _, post := range data.Posts[1:] {
 		parent, err := post.Parent()
 		if err != nil {
@@ -130,7 +129,7 @@ func remove_citations(m string) (string, error) {
 }
 
 // print_comment prints the message provided as well as any children
-func print_comment(msg Message, rsp Rsp, depth int) {
+func print_comment(msg Message, rsp Thread, depth int) {
 	parentId, err := msg.Parent()
 	if err != nil {
 		log.Print(err)
@@ -155,11 +154,11 @@ func print_comment(msg Message, rsp Rsp, depth int) {
 		fmt.Printf(strings.Repeat(" ", Max(depth*3, 0))+">> %s - %d - %s\n\n",
 			msg.Author,
 			msg.No,
-			human_time(msg.Time))
+			humanTime(msg.Time))
 	} else {
 		fmt.Printf(strings.Repeat(" ", Max(depth*3, 0))+">> %d - %s\n\n",
 			msg.No,
-			human_time(msg.Time))
+			humanTime(msg.Time))
 	}
 	// Try to find childs
 	for _, othermsg := range rsp.Posts[1:] {
@@ -180,8 +179,8 @@ func html2console(raw string, depth int) string {
 	return s + fmt.Sprintln()
 }
 
-// print_op Prints the main thread post
-func print_op(resp Rsp) {
+// printOp Prints the main thread post
+func printOp(resp Thread) {
 	// Header
 	fmt.Printf("\ntitle: %s\nurl: %s\n", resp.Posts[0].Title, uri)
 	for _, media := range resp.Posts[0].getMedia() {
@@ -191,14 +190,12 @@ func print_op(resp Rsp) {
 	// Message
 	fmt.Printf("%s\n", html2console(resp.Posts[0].Comment, 1))
 	// Footer
+	author := resp.Posts[0].Author
+	date := humanTime(resp.Posts[0].Time)
+	id := resp.Posts[0].No
 	if showAuthors == true {
-		fmt.Printf("%s - %d -  %s\n\n\n",
-			resp.Posts[0].Author,
-			resp.Posts[0].No,
-			human_time(resp.Posts[0].Time))
+		fmt.Printf("%s - %d -  %s\n\n\n", author, id, date)
 	} else {
-		fmt.Printf("%d - %s\n\n\n",
-			resp.Posts[0].No,
-			human_time(resp.Posts[0].Time))
+		fmt.Printf("%d - %s\n\n\n", id, date)
 	}
 }

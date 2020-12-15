@@ -5,7 +5,7 @@ import (
 	"flag"
 )
 
-type Rsp struct {
+type Thread struct {
 	Posts []Message
 }
 
@@ -72,10 +72,10 @@ func main() {
 		panic(err)
 	}
 
-	var data Rsp
-	if err := json.Unmarshal(bytes, &data); err != nil {
+	var thread Thread
+	if err := json.Unmarshal(bytes, &thread); err != nil {
 		panic(err)
 	}
-	print_op(data)
-	print_comments(data)
+	printOp(thread)
+	print_comments(thread)
 }
