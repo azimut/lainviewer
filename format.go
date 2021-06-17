@@ -174,26 +174,24 @@ func print_comment(msg Message, rsp Thread, depth int) {
 
 func html2console(raw string, depth int) string {
 	md, _ := html2text.FromString(raw, html2text.Options{PrettyTables: true})
-	// TODO: use console width
-	s, _ := text.WrapLeftPadded(md, 80, depth*3+1)
+	s, _ := text.WrapLeftPadded(md, int(width), depth*3+1)
 	return s + fmt.Sprintln()
 }
 
 // printOp Prints the main thread post
-func printOp(resp Thread) {
+func printOp(msg Message) {
 	// Header
-	fmt.Printf("\ntitle: %s\nurl: %s\n", resp.Posts[0].Title, uri)
-	for _, media := range resp.Posts[0].getMedia() {
+	fmt.Printf("\ntitle: %s\nurl: %s\n", msg.Title, uri)
+	for _, media := range msg.getMedia() {
 		fmt.Printf("media: %s\n", media)
 	}
-	fmt.Println()
 	// Message
-	fmt.Printf("%s\n", html2console(resp.Posts[0].Comment, 1))
+	fmt.Printf("\n%s\n", html2console(msg.Comment, 1))
 	// Footer
-	author := resp.Posts[0].Author
-	date := humanTime(resp.Posts[0].Time)
-	id := resp.Posts[0].No
-	if showAuthors == true {
+	author := msg.Author
+	date := humanTime(msg.Time)
+	id := msg.No
+	if showAuthors {
 		fmt.Printf("%s - %d -  %s\n\n\n", author, id, date)
 	} else {
 		fmt.Printf("%d - %s\n\n\n", id, date)

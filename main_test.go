@@ -10,7 +10,7 @@ func TestMain(t *testing.T) {
 
 	uri = "https://lainchan.org/music/res/6019.html"
 	showAuthors = false
-	if err := validate_uri(); err != nil {
+	if err := validateUri(); err != nil {
 		panic(err)
 	}
 

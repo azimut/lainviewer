@@ -3,67 +3,29 @@ package main
 import (
 	"encoding/json"
 	"flag"
+	"time"
 )
 
-type Thread struct {
-	Posts []Message
-}
+var (
+	showAuthors bool
+	timeout     time.Duration
+	uri         string
+	userAgent   string
+	width       uint
+)
 
-type Message struct {
-	No             int    `json:"no"`
-	Title          string `json:"sub"`
-	Comment        string `json:"com"`
-	Author         string `json:"name"`
-	trip           string
-	Time           int64 `json:"time"`
-	omitted_posts  int
-	omitted_images int
-	sticky         int
-	locked         int
-	cyclical       string
-	last_modified  int
-	tn_h           int
-	tn_w           int
-	h              int
-	w              int
-	Fsize          uint64 `json:"fsize"`
-	Filename       string `json:"filename"`
-	Ext            string `json:"ext"`
-	Tim            string `json:"tim"`
-	md5            string
-	Resto          int     `json:"resto"`
-	ExtraFiles     []Extra `json:"extra_files"`
-}
-
-type Extra struct {
-	tn_h     int
-	tn_w     int
-	h        int
-	w        int
-	Fsize    uint64 `json:"fsize"`
-	Filename string `json:"filename"`
-	Ext      string `json:"ext"`
-	Tim      string `json:"tim"`
-	md5      string
-}
-
-var timeout int
-var uri string
-var maxWidth int
-var showAuthors bool
-
-// TODO: flag color
-// TODO: max width
 func init() {
-	flag.StringVar(&uri, "u", "", "url")
-	flag.IntVar(&timeout, "t", 5, "timeout after seconds")
-	flag.IntVar(&maxWidth, "w", 120, "max text width")
-	flag.BoolVar(&showAuthors, "A", true, "show comment authors")
+	flag.StringVar(&userAgent, "A", "LainViewer/0.1", "user agent")
+	flag.UintVar(&width, "w", 0, "width")
+	flag.DurationVar(&timeout, "t", time.Second*5, "timeout after")
+	flag.BoolVar(&showAuthors, "a", false, "show author comments")
 }
 
 func main() {
-	flag.Parse()
-	if err := validate_uri(); err != nil {
+	if err := processFlags(); err != nil {
+		panic(err)
+	}
+	if err := validateFlags(); err != nil {
 		panic(err)
 	}
 
@@ -76,6 +38,7 @@ func main() {
 	if err := json.Unmarshal(bytes, &thread); err != nil {
 		panic(err)
 	}
-	printOp(thread)
+
+	printOp(thread.Posts[0])
 	print_comments(thread)
 }
