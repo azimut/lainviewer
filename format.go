@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"log"
 	"strconv"
@@ -96,10 +97,11 @@ func (m *Message) getMedia() (media []string) {
 	return media
 }
 
-// print_comments prints the rest of the messages
+// printComments prints the rest of the messages
 // TODO: sanitize author for trailing spaces at least
 // NOTE: Resto field is useless, it ALWAYS has the mainID
-func print_comments(data Thread) {
+func printComments(data Thread) string {
+	var bytes bytes.Buffer
 	for _, post := range data.Posts[1:] {
 		parent, err := post.Parent()
 		if err != nil {
@@ -110,9 +112,10 @@ func print_comments(data Thread) {
 			log.Print(err)
 		}
 		if parent == 0 || parent == data.Posts[0].No || orphan {
-			print_comment(post, data, 0)
+			printComment(&bytes, post, data, 0)
 		}
 	}
+	return bytes.String()
 }
 
 // remove_citations removes ALL citations to the original post AND link to parent post. Might be too much for normal post, but we limit the usage to single parent posts. Otherwise parsers gets confused and print a long line. Like this one.
@@ -128,8 +131,8 @@ func remove_citations(m string) (string, error) {
 	return doc.Html()
 }
 
-// print_comment prints the message provided as well as any children
-func print_comment(msg Message, rsp Thread, depth int) {
+// printComment prints the message provided as well as any children
+func printComment(bytes *bytes.Buffer, msg Message, rsp Thread, depth int) {
 	parentId, err := msg.Parent()
 	if err != nil {
 		log.Print(err)
@@ -139,24 +142,24 @@ func print_comment(msg Message, rsp Thread, depth int) {
 		if err != nil {
 			log.Print(err)
 		}
-		fmt.Printf("%s", html2console(
+		fmt.Fprintf(bytes, "%s", html2console(
 			msg,
 			depth))
 	} else {
-		fmt.Printf("%s", html2console(msg.Comment, depth))
+		fmt.Fprintf(bytes, "%s", html2console(msg.Comment, depth))
 	}
 	// Media
 	for _, media := range msg.getMedia() {
-		fmt.Printf(strings.Repeat(" ", Max(depth*3+1, 0))+"%s\n", media)
+		fmt.Fprintf(bytes, strings.Repeat(" ", Max(depth*3+1, 0))+"%s\n", media)
 	}
 	// Footer
 	if showAuthors {
-		fmt.Printf(strings.Repeat(" ", Max(depth*3, 0))+">> %s - %d - %s\n\n",
+		fmt.Fprintf(bytes, strings.Repeat(" ", Max(depth*3, 0))+">> %s - %d - %s\n\n",
 			msg.Author,
 			msg.No,
 			humanTime(msg.Time))
 	} else {
-		fmt.Printf(strings.Repeat(" ", Max(depth*3, 0))+">> %d - %s\n\n",
+		fmt.Fprintf(bytes, strings.Repeat(" ", Max(depth*3, 0))+">> %d - %s\n\n",
 			msg.No,
 			humanTime(msg.Time))
 	}
@@ -167,7 +170,7 @@ func print_comment(msg Message, rsp Thread, depth int) {
 			log.Print(err)
 		}
 		if msg.No == otherParentId {
-			print_comment(othermsg, rsp, depth+1)
+			printComment(bytes, othermsg, rsp, depth+1)
 		}
 	}
 }
@@ -178,22 +181,28 @@ func html2console(raw string, depth int) string {
 	return s + fmt.Sprintln()
 }
 
+func (t Thread) String() string {
+	return printOp(t.Posts[0]) + printComments(t)
+}
+
 // printOp Prints the main thread post
-func printOp(msg Message) {
+func printOp(msg Message) string {
+	var bytes bytes.Buffer
 	// Header
-	fmt.Printf("\ntitle: %s\nurl: %s\n", msg.Title, uri)
+	fmt.Fprintf(&bytes, "\ntitle: %s\nurl: %s\n", msg.Title, uri)
 	for _, media := range msg.getMedia() {
-		fmt.Printf("media: %s\n", media)
+		fmt.Fprintf(&bytes, "media: %s\n", media)
 	}
 	// Message
-	fmt.Printf("\n%s\n", html2console(msg.Comment, 1))
+	fmt.Fprintf(&bytes, "\n%s\n", html2console(msg.Comment, 1))
 	// Footer
 	author := msg.Author
 	date := humanTime(msg.Time)
 	id := msg.No
 	if showAuthors {
-		fmt.Printf("%s - %d -  %s\n\n\n", author, id, date)
+		fmt.Fprintf(&bytes, "%s - %d -  %s\n\n\n", author, id, date)
 	} else {
-		fmt.Printf("%d - %s\n\n\n", id, date)
+		fmt.Fprintf(&bytes, "%d - %s\n\n\n", id, date)
 	}
+	return bytes.String()
 }

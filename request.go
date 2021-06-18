@@ -1,7 +1,7 @@
 package main
 
 import (
-	"errors"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -25,34 +25,41 @@ func srcFilename(filename string, extension string) (string, error) {
 
 // getUrl get JSON from url
 func getUrl() ([]byte, error) {
-	client := &http.Client{
-		Timeout: timeout}
-
 	req, err := http.NewRequest(http.MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
 	}
-	// TODO: set UA through a flag
 	req.Header.Set("User-Agent", userAgent)
 
+	client := &http.Client{Timeout: timeout}
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
 
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
 	if resp.StatusCode != http.StatusOK {
-		r, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-			return nil, err
-		}
 		fmt.Println(uri)
-		fmt.Println(string(r))
+		fmt.Println(string(body))
 		return nil, fmt.Errorf("invalid http status code %d", resp.StatusCode)
 	}
 
-	if b, err := ioutil.ReadAll(resp.Body); err == nil {
-		return b, nil
+	return body, nil
+}
+
+func doRequest() (*Thread, error) {
+	bytes, err := getUrl()
+	if err != nil {
+		return nil, err
 	}
-	return nil, errors.New("no body read")
+	var thread Thread
+	if err := json.Unmarshal(bytes, &thread); err != nil {
+		return nil, err
+	}
+	return &thread, err
 }

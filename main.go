@@ -1,8 +1,8 @@
 package main
 
 import (
-	"encoding/json"
 	"flag"
+	"fmt"
 	"time"
 )
 
@@ -29,16 +29,10 @@ func main() {
 		panic(err)
 	}
 
-	bytes, err := getUrl()
+	thread, err := doRequest()
 	if err != nil {
 		panic(err)
 	}
 
-	var thread Thread
-	if err := json.Unmarshal(bytes, &thread); err != nil {
-		panic(err)
-	}
-
-	printOp(thread.Posts[0])
-	print_comments(thread)
+	fmt.Print(thread)
 }

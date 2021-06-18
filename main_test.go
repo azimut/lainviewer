@@ -24,5 +24,5 @@ func TestMain(t *testing.T) {
 		panic(err)
 	}
 	printOp(data)
-	print_comments(data)
+	printComments(data)
 }

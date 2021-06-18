@@ -28,10 +28,6 @@ func validateFlags() error {
 
 // TODO: remove url arguments?
 func validateUri() error {
-	if uri == "" {
-		return errors.New("-u parameter not provided")
-	}
-
 	_, err := url.Parse(uri)
 	if err != nil {
 		return err
