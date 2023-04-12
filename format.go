@@ -100,19 +100,19 @@ func (m *Message) getMedia() (media []string) {
 // printComments prints the rest of the messages
 // TODO: sanitize author for trailing spaces at least
 // NOTE: Resto field is useless, it ALWAYS has the mainID
-func printComments(data Thread) string {
+func printComments(thread Thread) string {
 	var bytes bytes.Buffer
-	for _, post := range data.Posts[1:] {
+	for _, post := range thread.Posts[1:] {
 		parent, err := post.Parent()
 		if err != nil {
 			log.Print(err)
 		}
-		orphan, err := post.isOrphan(data)
+		orphan, err := post.isOrphan(thread)
 		if err != nil {
 			log.Print(err)
 		}
-		if parent == 0 || parent == data.Posts[0].No || orphan {
-			printComment(&bytes, post, data, 0)
+		if parent == 0 || parent == thread.Posts[0].No || orphan {
+			printComment(&bytes, post, thread, 0)
 		}
 	}
 	return bytes.String()

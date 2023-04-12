@@ -11,7 +11,7 @@ import (
 	"github.com/nathan-fiscaletti/consolesize-go"
 )
 
-func validateWidth() {
+func initializeWidth() {
 	if width == 0 {
 		cols, _ := consolesize.GetConsoleSize()
 		width = uint(cols)
@@ -19,7 +19,7 @@ func validateWidth() {
 }
 
 func validateFlags() error {
-	validateWidth()
+	initializeWidth()
 	if err := validateUri(); err != nil {
 		return err
 	}

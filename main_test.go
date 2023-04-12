@@ -23,6 +23,6 @@ func TestMain(t *testing.T) {
 	if err := json.Unmarshal(bytes, &data); err != nil {
 		panic(err)
 	}
-	printOp(data)
-	printComments(data)
+	OriginalPoster(data)
+	Comments(data)
 }
