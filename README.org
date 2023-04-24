@@ -1,4 +1,6 @@
 * lainviewer
+**ARCHIVED** in favor of [[https://github.com/azimut/cli-view][cli-view]] which might some day have a TUI
+
 Cli viewer of lainchan threads.
 ** Usage
 #+begin_src
